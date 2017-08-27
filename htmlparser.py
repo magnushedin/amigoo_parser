@@ -122,8 +122,20 @@ match = re.findall(r'openLapsWindow\(([0-9]*),([0-9]*)', htmlpage, re.I|re.M)
 for i in match:
     urls.append("http://amigoo.se/lap?heatid=" + i[0] + "&participantid=" + i[1])
 
-print("html.read()")
-print(htmlpage)
+heatname = ""
+print("Heat type:")
+match = re.findall(r'Heat</td><td><a href=\"/event/1469\">([a-z,A-Z,0-9]*)', htmlpage, re.I|re.M)
+for name in match:
+	#print(i)
+	heatname = name
+
+cartclass = ""
+matches = re.findall(r'<td class=\"class\" title=\"([a-z,A-Z,0-9]*)', htmlpage, re.I|re.M)
+for match in matches:
+	cartclass = match
+
+#print("html.read()")
+#print(htmlpage)
 
 print("Fetched driver urls from -->", url , ":")
 for url in urls:
@@ -178,11 +190,11 @@ for url in urls:
 
 legend = ax.legend(shadow=True)
 legend2 = ax2.legend(shadow=True)
-ax.set_title('Final KZ')
-ax2.set_title('Final KZ')
+ax.set_title(heatname + ", " + cartclass)
+ax2.set_title(heatname + ", " + cartclass)
 ax.set_xlabel('Varvnummer')
 ax.set_ylabel('Tid [s]')
 ax2.set_xlabel('Varvnummer')
 ax2.set_ylabel('Tid efter ledaren [s]')
 plt.savefig("test.png")
-#plt.show()
+plt.show()
