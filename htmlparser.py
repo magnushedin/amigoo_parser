@@ -14,12 +14,13 @@ def dprint(*text):
 	pass
 
 class MyHTMLParser(HTMLParser):
-	laps = []
-	lap_nr = []
+	laps = [] # time for each parsed lap
+	lap_nr = [] # order in which the laps are parsed
 	save_lap = 0
 	save_time = 0
 	save_name = 0
 	driver = ""
+	nolap = 0
 
 	def getDriverName(self):
 		dprint("will return driver name: ", self.driver)
@@ -39,6 +40,7 @@ class MyHTMLParser(HTMLParser):
 		self.save_lap = 0
 		self.save_time = 0
 		self.driver = ""
+		self.nolap = 0
 
 	def printlaps(self):
 		for i, lap in enumerate(self.lap_nr):
@@ -66,14 +68,17 @@ class MyHTMLParser(HTMLParser):
 			dprint("deb, saved a lap: ", data)
 			try:
 				self.lap_nr.append(int(data))
+				self.nolap = 0
 			except:
-				dprint("error saving lap: ", data)
-		if (self.save_time == 1):
+				print("error saving lap: ", data)
+				self.nolap = 1
+		if ((self.save_time == 1) & (self.nolap == 0)):
 			dprint("deb, saved some time: ", data)
 			try:
 				self.laps.append(float(data))
 			except:
-				dprint("error saving time: ", data)
+				self.laps.append(float(0))
+				print("error saving time: ", data)
 		if (self.save_name == 1):
 			self.save_name = 0
 			self.driver = data
@@ -143,9 +148,9 @@ for url in urls:
 print("")
 
 fig, ax = plt.subplots()
-plt.axis([0.5, 16, 40, 46])
+plt.axis([0.5, 24, 0, 46])
 fig2, ax2 =plt.subplots()
-plt.axis([0.5, 16, 0, 40])
+plt.axis([0.5, 24, 0, 40])
 
 fastestlaps = []
 timediff = []
