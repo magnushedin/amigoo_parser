@@ -75,10 +75,15 @@ class MyHTMLParser(HTMLParser):
 		if ((self.save_time == 1) & (self.nolap == 0)):
 			dprint("deb, saved some time: ", data)
 			try:
-				self.laps.append(float(data))
+				if (data.find(":") == -1): # if the lap time is longer than 1 minute this needs to be converted to seconds
+					self.laps.append(float(data))
+				else:
+					tmppos = data.find(":")
+					#print("--- found a minute ---: ", data[tmppos+1::1], str(float(data[0:tmppos:1])*60))
+					self.laps.append(float(data[tmppos+1::1]) + float(data[0:tmppos:1])*60)
 			except:
 				self.laps.append(float(0))
-				#print("error saving time: ", data)
+				print("error saving time: ", data)
 		if (self.save_name == 1):
 			self.save_name = 0
 			self.driver = data
@@ -203,4 +208,4 @@ ax.set_ylabel('Tid [s]')
 ax2.set_xlabel('Varvnummer')
 ax2.set_ylabel('Tid efter ledaren [s]')
 plt.savefig("test.png")
-#plt.show()
+plt.show()
