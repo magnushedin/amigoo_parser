@@ -70,7 +70,7 @@ class MyHTMLParser(HTMLParser):
 				self.lap_nr.append(int(data))
 				self.nolap = 0
 			except:
-				print("error saving lap: ", data)
+				#print("error saving lap: ", data)
 				self.nolap = 1
 		if ((self.save_time == 1) & (self.nolap == 0)):
 			dprint("deb, saved some time: ", data)
@@ -78,7 +78,7 @@ class MyHTMLParser(HTMLParser):
 				self.laps.append(float(data))
 			except:
 				self.laps.append(float(0))
-				print("error saving time: ", data)
+				#print("error saving time: ", data)
 		if (self.save_name == 1):
 			self.save_name = 0
 			self.driver = data
@@ -161,7 +161,7 @@ for url in urls:
 	html = urllib.request.urlopen(url)
 	parser = MyHTMLParser()
 	parser.feed(str(html.read()))
-	parser.printlaps()
+	#parser.printlaps()
 	lap_nr, laps = parser.getData()
 
 	if (fastestlaps == []):
@@ -178,11 +178,12 @@ for url in urls:
 		olddiff = diff + olddiff
 
 	#print("Lap number: ", lap_nr)
-	print(url)
+	print("url: ", url)
 	print("Driver name: ", parser.getDriverName())
-	print("Lap time: ", laps)
+	#print("Lap time: ", laps)
+	print( '{:<12s} {:<12s} {:<12s}'.format("Laptime", "delta diff", "diff") )
 	for i in lap_nr:
-		print(timediff[i-1], ", ", timederiv[i-1])
+		print('{:<12.3f} {:<12.3f} {:<12.3f}'.format(laps[i-1], timediff[i-1], timederiv[i-1]))
 	print("\n")
 
 
@@ -202,4 +203,4 @@ ax.set_ylabel('Tid [s]')
 ax2.set_xlabel('Varvnummer')
 ax2.set_ylabel('Tid efter ledaren [s]')
 plt.savefig("test.png")
-plt.show()
+#plt.show()
